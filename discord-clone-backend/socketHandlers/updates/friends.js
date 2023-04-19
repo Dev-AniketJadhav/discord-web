@@ -7,7 +7,20 @@ const updateFriendsPendingInvitation= async (userId)=>{
         const pendingInvitations= await FriendInvitation.find({
             receiverId:userId,
         }).populate('senderId')
+        const receiverList= serverStore.getActiveConnections(userId);
+  const io=serverStore.getSocketServerInstance();
+   receiverList.forEach(receiverSocketId=>{
+    io.to(receiverSocketId.emit('friends-invitations',{
+        pendingInvitations:pendingInvitations? pendingInvitations:[],
+    }))
+   })
     } catch (err) {
         console.log(err);
     }
+    //find ll active connectioons of specific userId
+  
+
+}
+module.exports={
+    updateFriendsPendingInvitation
 }

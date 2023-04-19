@@ -1,6 +1,7 @@
 const User=require('../../models/user');
 //const FriendInvitation=require('../../models/friendInvitation');
 const FriendInvitation=require('../../models/friendInvitation');
+const friendsUpdate=require('../../socketHandlers/updates/friends')
 const postInvite =async (req,res)=>{
     const {targetMailAddres}= req.body;
 
@@ -44,7 +45,9 @@ const postInvite =async (req,res)=>{
             receiverId:targetUser._id,
         });
 
-        //
+        //send pending invitiation update to specific user
+        friendsUpdate.updateFriendsPendingInvitations(targetUser._id.toString());
+
     return res.status(201).send('controller is working');
 }
 
